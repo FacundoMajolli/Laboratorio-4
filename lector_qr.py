@@ -32,7 +32,7 @@ def captura_y_procesamiento():
         qrDetector = cv2.QRCodeDetector()
         data, bbox, rectifiedImage = qrDetector.detectAndDecode(frame)
 
-        if len(data) > 0 and not escaneo_completo:
+        if bbox is not None and bbox.size > 0 and len(data) > 0 and not escaneo_completo:
             print(f'Dato: {data}')
 
             # Obtener la fecha y hora actual
@@ -78,7 +78,7 @@ keyboard.wait('s')
 thread.join()
 
 # Guardar el DataFrame en un archivo Excel
-df.to_excel(archivo_excel, index=False, sheet_name='Sheet1', header=True, startrow=0, engine='openpyxl')
+df.iloc[:, :5].to_excel(archivo_excel, index=False, sheet_name='Sheet1', header=True, startrow=0, engine='openpyxl')
 
 # Liberar la captura y cerrar ventanas
 capture.release()
@@ -86,4 +86,3 @@ cv2.destroyAllWindows()
 
 print("DataFrame actualizado:")
 print(df)
-
