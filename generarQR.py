@@ -20,7 +20,7 @@ def generar_qr(nombre, apellido, dni):
     imagen_qr = qr.make_image(fill_color="black", back_color="white")
 
     # Guarda la imagen QR en un archivo
-    nombre_archivo = f"{nombre}_{apellido}_DNI_{dni}_qr.png"
+    nombre_archivo = f"DNI_{dni}_qr.png"
     imagen_qr.save(nombre_archivo)
 
     print(f"Código QR generado y guardado como {nombre_archivo}")

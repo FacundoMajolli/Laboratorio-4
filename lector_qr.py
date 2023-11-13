@@ -86,3 +86,4 @@ cv2.destroyAllWindows()
 
 print("DataFrame actualizado:")
 print(df)
+
