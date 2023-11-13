@@ -64,7 +64,11 @@ def captura_y_procesamiento():
             cv2.imshow('webCam', frame)
 
         # Liberar la tecla después de procesarla
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        if cv2.waitKey(1) == ord('q'):
+            escaneo_completo = True
+
+        # Salir del bucle si el escaneo ha sido completado
+        if escaneo_completo:
             break
 
 # Iniciar el hilo para captura y procesamiento
