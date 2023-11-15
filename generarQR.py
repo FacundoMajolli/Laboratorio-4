@@ -26,8 +26,8 @@ def generar_qr(nombre, apellido, dni):
     print(f"Código QR generado y guardado como {nombre_archivo}")
 
 # Ejemplo de uso
-nombre = "Anahi"
-apellido = "Reynoso"
-dni = "31949304"
+nombre = "tobias"
+apellido = "molinero"
+dni = "40123456"
 
 generar_qr(nombre, apellido, dni)

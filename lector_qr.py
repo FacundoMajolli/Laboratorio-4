@@ -5,6 +5,7 @@ from datetime import datetime
 import threading
 import keyboard
 import os
+import sys
 
 # Verificar si el archivo Excel ya existe
 archivo_excel = 'qr_data.xlsx'
@@ -23,9 +24,12 @@ capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 240)  # Reducir a la mitad
 # Variable para controlar la ejecución
 escaneo_completo = False
 
+# Variable para controlar si se cerró la cámara por Escape
+camera_closed_by_escape = False
+
 # Función para captura y procesamiento en un hilo
 def captura_y_procesamiento():
-    global df, escaneo_completo
+    global df, escaneo_completo, camera_closed_by_escape
     while capture.isOpened():
         ret, frame = capture.read()
 
@@ -56,37 +60,38 @@ def captura_y_procesamiento():
 
             # Agrega un pequeño retraso para procesar menos cuadros por segundo
             cv2.waitKey(10)
-
+            
             # Marcar que el escaneo ha sido completado
             escaneo_completo = True
+
+            # Cerrar la cámara después del escaneo completo
+            capture.release()
+            cv2.destroyAllWindows()
 
         else:
             cv2.imshow('webCam', frame)
 
         # Liberar la tecla después de procesarla
-        if cv2.waitKey(1) == ord('q'):
-            escaneo_completo = True
-
-        # Salir del bucle si el escaneo ha sido completado
-        if escaneo_completo:
+        key = cv2.waitKey(1)
+        if key == 27:  # Verifica si la tecla presionada es 'ESC' (27 es el código ASCII para la tecla ESC)
+            camera_closed_by_escape = True
             break
 
 # Iniciar el hilo para captura y procesamiento
 thread = threading.Thread(target=captura_y_procesamiento)
 thread.start()
 
-# Esperar a que se presione la tecla 's' para detener el escaneo
-keyboard.wait('s')
-
 # Esperar a que el hilo termine antes de continuar
 thread.join()
 
-# Guardar el DataFrame en un archivo Excel
-df.iloc[:, :5].to_excel(archivo_excel, index=False, sheet_name='Sheet1', header=True, startrow=0, engine='openpyxl')
+# Si la cámara se cerró por Escape, se cierra el programa sin actualizar el DataFrame
+if camera_closed_by_escape:
+    sys.exit()
 
-# Liberar la captura y cerrar ventanas
-capture.release()
-cv2.destroyAllWindows()
+# Guardar el DataFrame en un archivo Excel si se completó el escaneo para actualizarlo
+df.iloc[:, :5].to_excel(archivo_excel, index=False, sheet_name='Sheet1', header=True, startrow=0, engine='openpyxl')
 
 print("DataFrame actualizado:")
 print(df)
+
+
