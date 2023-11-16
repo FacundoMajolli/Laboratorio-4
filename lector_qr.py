@@ -92,4 +92,3 @@ df.iloc[:, :5].to_excel(archivo_excel, index=False, sheet_name='Sheet1', header=
 print("DataFrame actualizado:")
 print(df)
 
-
