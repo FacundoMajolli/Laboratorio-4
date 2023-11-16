@@ -1,9 +1,7 @@
 import cv2
-import numpy as np
 import pandas as pd
 from datetime import datetime
 import threading
-import keyboard
 import os
 import sys
 
